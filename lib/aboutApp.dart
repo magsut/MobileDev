@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Constants.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
-class AboutApp extends StatelessWidget {
+import 'Params.dart';
 
+class AboutApp extends StatelessWidget {
   final Function callback;
 
   const AboutApp({Key? key, required this.callback}) : super(key: key);
@@ -10,7 +12,7 @@ class AboutApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffE2EBFF),
+      backgroundColor: Params.theme ? LightTheme.mainColor : DarkTheme.mainColor,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,12 +31,15 @@ class AboutApp extends StatelessWidget {
                         child: NeumorphicIcon(
                           Icons.arrow_back_ios_outlined,
                           size: 15,
-                          style: NeumorphicStyle(color: Colors.black),
+                          style: NeumorphicStyle(
+                              color: Params.theme
+                                  ? LightTheme.textColor
+                                  : DarkTheme.textColor),
                         ),
                         style: NeumorphicStyle(
                           shape: NeumorphicShape.flat,
                           boxShape: NeumorphicBoxShape.circle(),
-                          depth: 8,
+                          depth: 2,
                           lightSource: LightSource.topLeft,
                           color: Colors.transparent,
                         ),
@@ -44,7 +49,9 @@ class AboutApp extends StatelessWidget {
                         child: Text(
                           'О разработчике',
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Params.theme
+                                ? LightTheme.textColor
+                                : DarkTheme.textColor,
                             fontSize: 25,
                             fontWeight: FontWeight.normal,
                           ),
@@ -65,7 +72,9 @@ class AboutApp extends StatelessWidget {
                           child: Text(
                             'Weather app',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: Params.theme
+                                  ? LightTheme.textColor
+                                  : DarkTheme.textColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 25,
                             ),
@@ -73,7 +82,7 @@ class AboutApp extends StatelessWidget {
                         ),
                       ),
                       style: NeumorphicStyle(
-                        depth: -5,
+                        depth: -2,
                         color: Colors.transparent,
                         boxShape: NeumorphicBoxShape.roundRect(
                             BorderRadius.circular(15)),
@@ -96,7 +105,9 @@ class AboutApp extends StatelessWidget {
                         child: Text(
                           "By Mazut",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Params.theme
+                                ? LightTheme.textColor
+                                : DarkTheme.textColor,
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                           ),
@@ -109,7 +120,9 @@ class AboutApp extends StatelessWidget {
                         child: Text(
                           "from ITMO University",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Params.theme
+                                ? LightTheme.textColor
+                                : DarkTheme.textColor,
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                           ),
@@ -122,7 +135,9 @@ class AboutApp extends StatelessWidget {
                         child: Text(
                           "Версия 1.0",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Params.theme
+                                ? LightTheme.textColor
+                                : DarkTheme.textColor,
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                           ),
@@ -135,7 +150,9 @@ class AboutApp extends StatelessWidget {
                         child: Text(
                           "от 30 сентября 2021",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Params.theme
+                                ? LightTheme.textColor
+                                : DarkTheme.textColor,
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                           ),
@@ -148,8 +165,8 @@ class AboutApp extends StatelessWidget {
                         child: Text(
                           "2021",
                           style: TextStyle(
-                            fontSize: 10
-                          ),
+                              color: Params.theme ? LightTheme.textColor : DarkTheme.textColor,
+                              fontSize: 10),
                         ),
                       ),
                     )
@@ -157,7 +174,7 @@ class AboutApp extends StatelessWidget {
                 ),
               ),
               style: NeumorphicStyle(
-                depth: 15,
+                depth: 2,
                 color: Colors.transparent,
                 lightSource: LightSource.bottom,
                 boxShape: NeumorphicBoxShape.roundRect(

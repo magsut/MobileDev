@@ -6,8 +6,11 @@ import 'package:flutter_app/WeeklyForecast.dart';
 import 'package:flutter_app/search.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
+
+import 'Constants.dart';
 import 'DayForecast.dart';
 
+// ignore: camel_case_types
 class mainPage extends StatefulWidget {
   const mainPage({Key? key}) : super(key: key);
 
@@ -15,6 +18,7 @@ class mainPage extends StatefulWidget {
   State<mainPage> createState() => _mainPageState();
 }
 
+// ignore: camel_case_types
 class _mainPageState extends State<mainPage> {
   bool barOpen = false;
   var date = DateFormat.yMMMMd('ru').format(DateTime.now());
@@ -30,7 +34,7 @@ class _mainPageState extends State<mainPage> {
               width: double.infinity,
               height: double.infinity,
               child: Image(
-                image: AssetImage('assets/fone1.png'),
+                image: Params.theme ? AssetImage('assets/fone1.png') : AssetImage('assets/fone2.png'),
                 fit: BoxFit.fill,
               ),
             ),
@@ -51,13 +55,16 @@ class _mainPageState extends State<mainPage> {
                             style: NeumorphicStyle(
                               shape: NeumorphicShape.flat,
                               boxShape: NeumorphicBoxShape.circle(),
-                              depth: 8,
+                              depth: 2,
                               lightSource: LightSource.topLeft,
                               color: Colors.transparent,
                             ),
                             child: NeumorphicIcon(
                               Icons.menu,
                               size: 30,
+                              style: NeumorphicStyle(
+                                color: Colors.white,
+                              ),
                             )),
                         Column(
                           children: [
@@ -77,7 +84,15 @@ class _mainPageState extends State<mainPage> {
                             Visibility(
                               visible: !barOpen,
                               child: Text(
-                                Params.weather.current.temp.toInt().toString(),
+                                Params.temp
+                                    ? Params.weather.current.temp
+                                        .toInt()
+                                        .toString()
+                                    : (Params.weather.current.temp.toInt() *
+                                                1.8 +
+                                            32)
+                                        .toInt()
+                                        .toString(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 70,
@@ -94,13 +109,16 @@ class _mainPageState extends State<mainPage> {
                           style: NeumorphicStyle(
                             shape: NeumorphicShape.flat,
                             boxShape: NeumorphicBoxShape.circle(),
-                            depth: 8,
+                            depth: 2,
                             lightSource: LightSource.topLeft,
                             color: Colors.transparent,
                           ),
                           child: NeumorphicIcon(
                             Icons.add_circle_outline,
                             size: 30,
+                            style: NeumorphicStyle(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ],
@@ -118,7 +136,11 @@ class _mainPageState extends State<mainPage> {
                     Visibility(
                       visible: barOpen,
                       child: Text(
-                        Params.weather.current.temp.toInt().toString(),
+                        Params.temp
+                            ? Params.weather.current.temp.toInt().toString()
+                            : (Params.weather.current.temp.toInt() * 1.8 + 32)
+                                .toInt()
+                                .toString(),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 70,
@@ -147,12 +169,12 @@ class _mainPageState extends State<mainPage> {
         persistentContentHeight: 300,
         persistentHeader: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            color: Color(0xFFE2EBFF),
-          ),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+              color: Params.theme ? LightTheme.mainColor : DarkTheme.mainColor,
+              ),
           height: 40,
           child: Center(
             child: Padding(
@@ -163,6 +185,9 @@ class _mainPageState extends State<mainPage> {
                     visible: !barOpen,
                     child: Icon(
                       Icons.arrow_drop_up_outlined,
+                      color: Params.theme
+                          ? LightTheme.iconsColor
+                          : DarkTheme.iconsColor,
                     ),
                   ),
                   Visibility(
@@ -171,6 +196,9 @@ class _mainPageState extends State<mainPage> {
                       padding: const EdgeInsets.only(top: 6.0),
                       child: Icon(
                         Icons.arrow_drop_down_outlined,
+                        color: Params.theme
+                            ? LightTheme.iconsColor
+                            : DarkTheme.iconsColor,
                       ),
                     ),
                   ),
@@ -181,7 +209,7 @@ class _mainPageState extends State<mainPage> {
         ),
         expandableContent: Stack(children: [
           Container(
-            color: Color(0xFFE2EBFF),
+            color: Params.theme ? LightTheme.mainColor : DarkTheme.mainColor,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * .6,
           ),
@@ -194,7 +222,9 @@ class _mainPageState extends State<mainPage> {
                   child: Text(
                     date,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Params.theme
+                          ? LightTheme.textColor
+                          : DarkTheme.textColor,
                       fontSize: 17,
                     ),
                   ),
@@ -206,41 +236,69 @@ class _mainPageState extends State<mainPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TimeBlock(
-                        image: 'assets/sun.png',
+                        image: Params.weather.timeBlocks[0].image,
                         time: DateFormat.Hm().format(
                             DateTime.fromMillisecondsSinceEpoch(
                                 Params.weather.timeBlocks[0].time.toInt() *
                                     1000)),
-                        temperature: Params.weather.timeBlocks[0].temperature
-                            .toInt()
-                            .toString()),
+                        temperature: Params.temp
+                            ? Params.weather.timeBlocks[0].temperature
+                                .toInt()
+                                .toString()
+                            : (Params.weather.timeBlocks[0].temperature
+                                            .toInt() *
+                                        1.8 +
+                                    32)
+                                .toInt()
+                                .toString()),
                     TimeBlock(
                         time: DateFormat.Hm().format(
                             DateTime.fromMillisecondsSinceEpoch(
                                 Params.weather.timeBlocks[6].time.toInt() *
                                     1000)),
-                        image: 'assets/sun.png',
-                        temperature: Params.weather.timeBlocks[6].temperature
-                            .toInt()
-                            .toString()),
+                        image: Params.weather.timeBlocks[6].image,
+                        temperature: Params.temp
+                            ? Params.weather.timeBlocks[6].temperature
+                                .toInt()
+                                .toString()
+                            : (Params.weather.timeBlocks[6].temperature
+                                            .toInt() *
+                                        1.8 +
+                                    32)
+                                .toInt()
+                                .toString()),
                     TimeBlock(
                         time: DateFormat.Hm().format(
                             DateTime.fromMillisecondsSinceEpoch(
                                 Params.weather.timeBlocks[12].time.toInt() *
                                     1000)),
-                        image: 'assets/sun.png',
-                        temperature: Params.weather.timeBlocks[12].temperature
-                            .toInt()
-                            .toString()),
+                        image: Params.weather.timeBlocks[12].image,
+                        temperature: Params.temp
+                            ? Params.weather.timeBlocks[12].temperature
+                                .toInt()
+                                .toString()
+                            : (Params.weather.timeBlocks[12].temperature
+                                            .toInt() *
+                                        1.8 +
+                                    32)
+                                .toInt()
+                                .toString()),
                     TimeBlock(
                         time: DateFormat.Hm().format(
                             DateTime.fromMillisecondsSinceEpoch(
                                 Params.weather.timeBlocks[18].time.toInt() *
                                     1000)),
-                        image: 'assets/sun.png',
-                        temperature: Params.weather.timeBlocks[18].temperature
-                            .toInt()
-                            .toString()),
+                        image: Params.weather.timeBlocks[18].image,
+                        temperature: Params.temp
+                            ? Params.weather.timeBlocks[18].temperature
+                                .toInt()
+                                .toString()
+                            : (Params.weather.timeBlocks[18].temperature
+                                            .toInt() *
+                                        1.8 +
+                                    32)
+                                .toInt()
+                                .toString()),
                   ],
                 ),
               ),
@@ -249,6 +307,7 @@ class _mainPageState extends State<mainPage> {
                 child: Container(
                   height: 35,
                   child: Center(
+                    // ignore: deprecated_member_use
                     child: RaisedButton(
                       onPressed: () {
                         List<DayForecast> days = [];
@@ -257,9 +316,17 @@ class _mainPageState extends State<mainPage> {
                               day: DateFormat.MMMMd('ru').format(
                                   DateTime.fromMillisecondsSinceEpoch(
                                       day.day.toInt() * 1000)),
-                              image: 'assets/sun.png',
-                              temperature: (day.maxTemperature.toInt() +
-                                      day.minTemperature.toInt()) ~/ 2,
+                              image: 'assets/' + day.image + '.png',
+                              temperature: Params.temp
+                                  ? (day.maxTemperature.toInt() +
+                                          day.minTemperature.toInt()) ~/
+                                      2
+                                  : ((day.maxTemperature.toInt() +
+                                                  day.minTemperature.toInt()) ~/
+                                              2 *
+                                              1.8 +
+                                          32)
+                                      .toInt(),
                               speed: day.speed.toInt(),
                               humidity: day.humidity.toInt(),
                               pressure: day.pressure.toInt()));
@@ -272,14 +339,22 @@ class _mainPageState extends State<mainPage> {
                       child: Text(
                         "Прогноз на неделю",
                         style: TextStyle(
-                          color: Color(0xff038CFE),
+                          color: Params.theme
+                              ? LightTheme.textColor
+                              : DarkTheme.textColor,
                           fontSize: 14,
                         ),
                       ),
-                      color: Color(0xFFEAF0FF),
+                      color: Params.theme
+                          ? Color(0xFFEAF0FF)
+                          : Color(0xff0D182C),
                       shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(10.0),
-                        side: BorderSide(color: Color(0xFF038CFE)),
+                        side: BorderSide(
+                          color: Params.theme
+                              ? Color(0xff038CFE)
+                              : Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -309,24 +384,31 @@ class _mainPageState extends State<mainPage> {
                                       child: NeumorphicIcon(
                                         Icons.thermostat_sharp,
                                         style: NeumorphicStyle(
-                                          color: Color(0xff5A5A5A),
+                                          color: Params.theme ? LightTheme.iconsColor : DarkTheme.iconsColor,
                                         ),
                                       ),
                                     ),
                                     Padding(padding: EdgeInsets.only(left: 5)),
                                     Text(
-                                      Params.weather.current.temp
-                                          .toInt()
-                                          .toString(),
+                                      Params.temp
+                                          ? Params.weather.current.temp
+                                              .toInt()
+                                              .toString()
+                                          : (Params.weather.current.temp
+                                                          .toInt() *
+                                                      1.8 +
+                                                  32)
+                                              .toInt()
+                                              .toString(),
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: Params.theme ? LightTheme.textColor : DarkTheme.textColor,
                                         fontSize: 16,
                                       ),
                                     ),
                                     Text(
-                                      '˚c',
+                                      Params.temp ? "˚c" : "˚f",
                                       style: TextStyle(
-                                        color: Color(0xff5A5A5A),
+                                        color: Params.theme ? LightTheme.iconsColor : DarkTheme.iconsColor,
                                         fontSize: 16,
                                       ),
                                     ),
@@ -335,6 +417,7 @@ class _mainPageState extends State<mainPage> {
                               ),
                               style: NeumorphicStyle(
                                 color: Colors.transparent,
+                                depth: 2,
                               ),
                             ),
                             Neumorphic(
@@ -359,14 +442,14 @@ class _mainPageState extends State<mainPage> {
                                           .toInt()
                                           .toString(),
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: Params.theme ? LightTheme.textColor : DarkTheme.textColor,
                                         fontSize: 16,
                                       ),
                                     ),
                                     Text(
                                       '%',
                                       style: TextStyle(
-                                        color: Color(0xff5A5A5A),
+                                        color: Params.theme ? LightTheme.iconsColor : DarkTheme.iconsColor,
                                         fontSize: 16,
                                       ),
                                     ),
@@ -375,6 +458,7 @@ class _mainPageState extends State<mainPage> {
                               ),
                               style: NeumorphicStyle(
                                 color: Colors.transparent,
+                                depth: 2,
                               ),
                             ),
                           ],
@@ -399,24 +483,30 @@ class _mainPageState extends State<mainPage> {
                                       child: NeumorphicIcon(
                                         Icons.air,
                                         style: NeumorphicStyle(
-                                          color: Color(0xff5A5A5A),
+                                          color: Params.theme ? LightTheme.iconsColor : DarkTheme.iconsColor,
                                         ),
                                       ),
                                     ),
                                     Padding(padding: EdgeInsets.only(left: 5)),
                                     Text(
-                                      Params.weather.current.windSpeed
-                                          .toInt()
-                                          .toString(),
+                                      Params.speed
+                                          ? Params.weather.current.windSpeed
+                                              .toInt()
+                                              .toString()
+                                          : (Params.weather.current.windSpeed
+                                                      .toInt() *
+                                                  3.6)
+                                              .toInt()
+                                              .toString(),
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: Params.theme ? LightTheme.textColor : DarkTheme.textColor,
                                         fontSize: 16,
                                       ),
                                     ),
                                     Text(
-                                      'м/с',
+                                      Params.speed ? 'м/с' : " км/ч",
                                       style: TextStyle(
-                                        color: Color(0xff5A5A5A),
+                                        color: Params.theme ? LightTheme.iconsColor : DarkTheme.iconsColor,
                                         fontSize: 16,
                                       ),
                                     ),
@@ -425,6 +515,7 @@ class _mainPageState extends State<mainPage> {
                               ),
                               style: NeumorphicStyle(
                                 color: Colors.transparent,
+                                depth: 2,
                               ),
                             ),
                             Neumorphic(
@@ -440,24 +531,29 @@ class _mainPageState extends State<mainPage> {
                                       child: NeumorphicIcon(
                                         Icons.speed,
                                         style: NeumorphicStyle(
-                                          color: Color(0xff5A5A5A),
+                                          color: Params.theme ? LightTheme.iconsColor : DarkTheme.iconsColor,
                                         ),
                                       ),
                                     ),
                                     Padding(padding: EdgeInsets.only(left: 5)),
                                     Text(
-                                      Params.weather.current.pressure
-                                          .toInt()
-                                          .toString(),
+                                      Params.pressure
+                                          ? Params.weather.current.pressure
+                                              .toInt()
+                                              .toString()
+                                          : (Params.weather.current.pressure
+                                                      .toInt() ~/
+                                                  0.75)
+                                              .toString(),
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: Params.theme ? LightTheme.textColor : DarkTheme.textColor,
                                         fontSize: 16,
                                       ),
                                     ),
                                     Text(
-                                      'мм.рт.ст',
+                                      Params.pressure ? 'мм.рт.ст' : 'гПа',
                                       style: TextStyle(
-                                        color: Color(0xff5A5A5A),
+                                        color: Params.theme ? LightTheme.iconsColor : DarkTheme.iconsColor,
                                         fontSize: 16,
                                       ),
                                     ),
@@ -466,6 +562,7 @@ class _mainPageState extends State<mainPage> {
                               ),
                               style: NeumorphicStyle(
                                 color: Colors.transparent,
+                                depth: 2,
                               ),
                             ),
                           ],
@@ -545,7 +642,7 @@ class TimeBlock extends StatelessWidget {
             Text(
               time,
               style: TextStyle(
-                color: Colors.black,
+                color: Params.theme ? LightTheme.textColor : DarkTheme.textColor,
                 fontSize: 16,
               ),
             ),
@@ -553,13 +650,13 @@ class TimeBlock extends StatelessWidget {
               height: 40,
               width: 40,
               child: Image(
-                image: AssetImage(image),
+                image: AssetImage('assets/' + image + '.png'),
               ),
             ),
             Text(
-              "$temperature˚c",
+              temperature + (Params.temp ? "˚c" : "˚f"),
               style: TextStyle(
-                color: Colors.black,
+                color: Params.theme ? LightTheme.textColor : DarkTheme.textColor,
                 fontSize: 16,
               ),
             ),
@@ -568,6 +665,7 @@ class TimeBlock extends StatelessWidget {
       ),
       style: NeumorphicStyle(
         color: Colors.transparent,
+        depth: 2,
       ),
     );
   }

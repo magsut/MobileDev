@@ -1,8 +1,9 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
+import 'Constants.dart';
 import 'DayForecast.dart';
+import 'Params.dart';
 
 class WeeklyForecast extends StatelessWidget {
   const WeeklyForecast({Key? key, required this.days}) : super(key: key);
@@ -12,7 +13,7 @@ class WeeklyForecast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffE2EBFF),
+      backgroundColor: Params.theme ? LightTheme.mainColor : DarkTheme.mainColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -22,7 +23,7 @@ class WeeklyForecast extends StatelessWidget {
                 child: Text(
                   "Прогноз на неделю",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Params.theme ? LightTheme.textColor : DarkTheme.textColor,
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
@@ -53,14 +54,16 @@ class WeeklyForecast extends StatelessWidget {
                 child: Text(
                   "Вернуться на главную",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Params.theme ? LightTheme.textColor : DarkTheme.textColor,
                     fontSize: 14,
                   ),
                 ),
-                color: Color(0xFFEAF0FF),
+                color: Params.theme ? LightTheme.mainColor : DarkTheme.mainColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(10.0),
-                  side: BorderSide(color: Colors.black),
+                  side: BorderSide(color: Params.theme
+                      ? Color(0xff038CFE)
+                      : Colors.white,),
                 ),
               ),
             ),
@@ -70,3 +73,5 @@ class WeeklyForecast extends StatelessWidget {
     );
   }
 }
+
+

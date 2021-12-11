@@ -5,8 +5,11 @@ import 'package:flutter_app/Params.dart';
 import 'package:flutter_app/Weather.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
+import 'Constants.dart';
+import 'SaveFunc.dart';
+
 class Favorites extends StatefulWidget {
-  const Favorites({Key? key, required this.callback} ) : super(key: key);
+  const Favorites({Key? key, required this.callback}) : super(key: key);
 
   final Function callback;
 
@@ -15,11 +18,10 @@ class Favorites extends StatefulWidget {
 }
 
 class _FavoritesState extends State<Favorites> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffE2EBFF),
+      backgroundColor: Params.theme ? LightTheme.mainColor : DarkTheme.mainColor,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,18 +32,21 @@ class _FavoritesState extends State<Favorites> {
                 children: [
                   NeumorphicButton(
                     onPressed: () {
-                      widget.callback((){});
+                      widget.callback(() {});
+                      Func.saveParamsToSharedPref();
                       Navigator.of(context).pop();
                     },
                     child: NeumorphicIcon(
                       Icons.arrow_back_ios_outlined,
                       size: 15,
-                      style: NeumorphicStyle(color: Colors.black),
+                      style: NeumorphicStyle(
+                        color: Params.theme ? LightTheme.textColor : DarkTheme.textColor,
+                      ),
                     ),
                     style: NeumorphicStyle(
                       shape: NeumorphicShape.flat,
                       boxShape: NeumorphicBoxShape.circle(),
-                      depth: 8,
+                      depth: 2,
                       lightSource: LightSource.topLeft,
                       color: Colors.transparent,
                     ),
@@ -51,7 +56,7 @@ class _FavoritesState extends State<Favorites> {
                     child: Text(
                       'Избранное',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Params.theme ? LightTheme.textColor : DarkTheme.textColor,
                         fontSize: 25,
                         fontWeight: FontWeight.normal,
                       ),
@@ -65,15 +70,17 @@ class _FavoritesState extends State<Favorites> {
                 // height: 300,
                 child: ListView.builder(
                   physics: BouncingScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) => FavoritePlace(
+                  itemBuilder: (BuildContext context, int index) =>
+                      FavoritePlace(
                     key: ValueKey(Params.favoritePlace[index].name),
-                      place: Params.favoritePlace[index],
-                      callback: () {
-                        setState(() {
-                          Params.favoritePlace.remove(Params.favoritePlace[index]);
-                        });
-                      },
-                    ),
+                    place: Params.favoritePlace[index],
+                    callback: () {
+                      setState(() {
+                        Params.favoritePlace
+                            .remove(Params.favoritePlace[index]);
+                      });
+                    },
+                  ),
                   itemCount: Params.favoritePlace.length,
                   semanticChildCount: Params.favoritePlace.length,
                 ),
@@ -112,7 +119,10 @@ class FavoritePlace extends StatelessWidget {
                   child: Center(
                     child: Text(
                       place.name,
-                      style: TextStyle(fontSize: 13),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Params.theme ? LightTheme.textColor : DarkTheme.textColor,
+                      ),
                     ),
                   ),
                 ),
@@ -130,13 +140,13 @@ class FavoritePlace extends StatelessWidget {
                       child: Icon(
                         Icons.close,
                         size: 13,
-                        color: Color(0xff323232),
+                        color: Params.theme ? LightTheme.iconsColor : DarkTheme.iconsColor,
                       ),
                     ),
                     style: NeumorphicStyle(
                       shape: NeumorphicShape.concave,
-                      depth: 15,
-                      color: Color(0xffC8DAFF),
+                      depth: 1,
+                      color: Params.theme ? Color(0xffC8DAFF): Color(0xff152A53),
                       boxShape: NeumorphicBoxShape.roundRect(
                           BorderRadius.circular(15)),
                     ),
@@ -146,7 +156,7 @@ class FavoritePlace extends StatelessWidget {
             ),
             style: NeumorphicStyle(
                 shape: NeumorphicShape.flat,
-                depth: -8,
+                depth: -2,
                 boxShape:
                     NeumorphicBoxShape.roundRect(BorderRadius.circular(15)),
                 color: Colors.transparent,

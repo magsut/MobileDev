@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter_app/Weather.dart';
 import 'package:http/http.dart' as http;
@@ -24,8 +23,6 @@ class Api {
         day.add(DayWeather.fromJson(d));
       }
       weather.weekForecast = day;
-
-      //log(weather.toString());
 
       return weather;
     } else {
@@ -58,9 +55,6 @@ class Api {
               places.add(Place(el['toponymName'], el['lng'], el['lat']));
             }
         );
-        // for(int i = 0; i < json['totalResultsCount'] - 1; i++){
-        //   places.add(Place(json['geonames'][i]['toponymName'], json['geonames'][i]['lng'], json['geonames'][i]['lat']));
-        // }
         return places;
       } else {
         throw Exception('Place not found');

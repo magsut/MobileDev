@@ -2,9 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ApiFunc.dart';
+import 'package:flutter_app/Constants.dart';
 import 'package:flutter_app/Params.dart';
 import 'package:flutter_app/Weather.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+
+import 'SaveFunc.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key? key}) : super(key: key);
@@ -19,7 +22,8 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffE2EBFF),
+      backgroundColor:
+          Params.theme ? LightTheme.mainColor : DarkTheme.mainColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -29,17 +33,22 @@ class _SearchPageState extends State<SearchPage> {
                 children: [
                   NeumorphicButton(
                     onPressed: () {
+                      Func.saveParamsToSharedPref();
                       Navigator.of(context).pop();
                     },
                     child: NeumorphicIcon(
                       Icons.arrow_back_ios_outlined,
                       size: 15,
-                      style: NeumorphicStyle(color: Colors.black),
+                      style: NeumorphicStyle(
+                        color: Params.theme
+                            ? LightTheme.iconsColor
+                            : DarkTheme.iconsColor,
+                      ),
                     ),
                     style: NeumorphicStyle(
                       shape: NeumorphicShape.flat,
                       boxShape: NeumorphicBoxShape.circle(),
-                      depth: 8,
+                      depth: 2,
                       lightSource: LightSource.topLeft,
                       color: Colors.transparent,
                     ),
@@ -50,10 +59,23 @@ class _SearchPageState extends State<SearchPage> {
                     child: Neumorphic(
                       child: TextField(
                         decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Введите населенный пункт",
-                            fillColor: Colors.black12,
-                            filled: true),
+                          border: InputBorder.none,
+                          hintText: "Введите населенный пункт",
+                          fillColor: Params.theme
+                              ? Colors.black12
+                              : DarkTheme.mainColor,
+                          filled: true,
+                          hintStyle: TextStyle(
+                            color: Params.theme
+                                ? LightTheme.textColor
+                                : DarkTheme.textColor,
+                          ),
+                        ),
+                        style: TextStyle(
+                          color: Params.theme
+                              ? LightTheme.textColor
+                              : DarkTheme.textColor,
+                        ),
                         onSubmitted: (text) async {
                           List<Place> places = await Api.getPlaces(text);
                           setState(() {
@@ -65,7 +87,12 @@ class _SearchPageState extends State<SearchPage> {
                           });
                         },
                       ),
-                      style: NeumorphicStyle(color: Color(0xffE2EBFF)),
+                      style: NeumorphicStyle(
+                        color: Params.theme
+                            ? LightTheme.mainColor
+                            : DarkTheme.mainColor,
+                        depth: 2,
+                      ),
                     ),
                   )
                 ],
@@ -116,7 +143,9 @@ class _SearchPlaceState extends State<SearchPlace> {
                   child: Text(
                     widget.place,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Params.theme
+                          ? LightTheme.textColor
+                          : DarkTheme.textColor,
                       fontSize: 13,
                     ),
                   ),
@@ -139,7 +168,12 @@ class _SearchPlaceState extends State<SearchPlace> {
                         });
                       }
                     },
-                    icon: Icon(icon),
+                    icon: Icon(
+                      icon,
+                      color: Params.theme
+                          ? LightTheme.iconsColor
+                          : DarkTheme.iconsColor,
+                    ),
                   ),
                 )
               ],

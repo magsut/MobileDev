@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Loading.dart';
 import 'package:flutter_app/MainPage.dart';
 import 'package:flutter_app/Params.dart';
+import 'package:flutter_app/SaveFunc.dart';
 import 'package:flutter_app/aboutApp.dart';
 import 'package:flutter_app/favorites.dart';
 import 'package:flutter_app/settings.dart';
@@ -42,6 +43,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return MaterialApp(
       theme: ThemeData(
         canvasColor: Color(0xFFE2EBFF),
+      ),
+      darkTheme: ThemeData(
+        canvasColor: Color(0xff0C172B)
       ),
       home: Scaffold(
         drawer: Drawer(
@@ -90,20 +94,27 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
-        body: FutureBuilder(
-              future: Api.getWeather(Params.selectedPlace.lat, Params.selectedPlace.lng),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return Builder(builder: (context) {
-                    Params.weather = snapshot.data as Weather;
-                    return mainPage();
-                  });
-                } else {
-                  return Load();
-                }
-              },
-            ),
+        body: Builder(
+          builder: (context) {
+            Func.getParamsFromSharedPref();
+            return FutureBuilder(
+                  future: Api.getWeather(Params.selectedPlace.lat, Params.selectedPlace.lng),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return Builder(builder: (context) {
+                        Params.weather = snapshot.data as Weather;
+                        return mainPage();
+                      });
+                    } else {
+                      return Load();
+                    }
+                  },
+                );
+          }
+        ),
       ),
     );
   }
 }
+
+

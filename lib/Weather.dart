@@ -25,7 +25,7 @@ class Current {
 
   factory Current.fromJson(Map<String, dynamic> json) {
     return Current(
-        pressure: json['current']['pressure'].toDouble(),
+        pressure: json['current']['pressure'].toDouble() * 0.75,
         humidity: json['current']['humidity'].toDouble(),
         temp: json['current']['temp'].toDouble(),
         windSpeed: json['current']['wind_speed'].toDouble());
@@ -84,7 +84,7 @@ class DayWeather {
         maxTemperature: json['temp']['max'],
         speed: json['wind_speed'],
         humidity: json['humidity'],
-        pressure: json['pressure']);
+        pressure: json['pressure'] * 0.75);
   }
 
   @override
@@ -103,5 +103,21 @@ class Place{
   @override
   String toString() {
     return 'Place{lng: $lng, lat: $lat}';
+  }
+
+  Map<String, dynamic> toJson(){
+    return{
+      'name' : name,
+      'lng' : lng,
+      'lat' : lat,
+    };
+  }
+
+  factory Place.fromJson(Map<String, dynamic> json){
+    return Place(
+        json['name'],
+        json['lng'],
+        json['lat']
+    );
   }
 }
